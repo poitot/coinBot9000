@@ -8,6 +8,22 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+client.on('voiceStateUpdate', (oldmember, newmember)=>{
+    let oldvoice = oldmember.voiceChannel;
+    let newvoice = newmember.voiceChannel;
+    if (newmember.member.user.username === "Yung Muriy") {
+        console.log("hit");
+        client.channels.fetch("471825896425259021").then( chan =>
+            chan.send("The non believer, has entered the ring. BTC = £100000000000").catch(function(error) {
+                console.log(error);
+            })
+        );
+        
+        
+    }
+   
+})
+
 client.on('message', message => {
 	if (message.content.includes("?")) {
         let reg = /[0-9]+[dwmy]+/;
