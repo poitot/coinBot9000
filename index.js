@@ -40,7 +40,7 @@ client.on('message', message => {
 
 
             console.log(matches);
-            let m = getSpot(coin + "-gbp", date).then(function (msg) {
+            let m = getSpot(coin + "-gbp", date = date).then(function (msg) {
                 console.log("sending message: " + msg);
                 message.channel.send(msg).catch(function (error) {
                     console.log(error);
@@ -86,7 +86,7 @@ client.on('message', message => {
 
 
 
-async function getSpot(curr, date) {
+async function getSpot(curr, date = null) {
     if (date === null)
     {
         var response = await fetch("https://api.coinbase.com/v2/prices/" + curr +"/spot");
