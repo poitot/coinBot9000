@@ -25,8 +25,9 @@ client.on('voiceStateUpdate', (oldmember, newmember)=>{
 })
 
 client.on('message', message => {
-	if (message.content.includes("?")) {
-        let reg = /[0-9]+[dwmy]+/;
+    // bug fix: fixed url params trigering spot price check; include() => startsWith()
+	if (message.content.startsWith('?')) {
+        let reg = /(\?*)(( )|[0-9])([dwmy])/;
         let matches = message.content.match(reg);
         if (matches != null)
         {
@@ -47,10 +48,13 @@ client.on('message', message => {
                 })
             });
         }
+        else if (message.content.match(/[dwmy]/)) {
+
+        }
         else {
             console.log("null")
         // send back spot price of btc from  coinbase API in GBP
-        let m = getSpot(message.content.replace('?', '') + "-gbp").then(function (msg) {
+        let m = getSpot(message.content.replace('?', '').replace(/ /g, '') + "-gbp").then(function (msg) {
             console.log("sending message: " + msg);
             message.channel.send(msg).catch(function (error) {
                 console.log(error);
@@ -58,25 +62,13 @@ client.on('message', message => {
         });
     }
         
-
     }
 
-    if (message.content === '!eth') {
-        let m = getSpot("eth-gbp").then(function (msg) {
-            console.log("sending message: " + msg);
-            message.channel.send(msg).catch(function (error) {
-                console.log(error);
-            })
-        });
-        console.log("client.on.message " + m);
-    }
+    if (message.content === '?help' || message.content === '?h') {
+        const msg = "Use ?btc to check the spot price of bitcoin, historic prices are also available using ?btc {(n)d, (n)w, (n)m, (n)y}"
+        message.channel.send(msg).catch(function (error) {
+            console.log(error);
 
-    if (message.content === '!help' || message.content === '!h') {
-        let m = getSpot("eth-gbp").then(function (msg) {
-            console.log("sending message: " + msg);
-            message.channel.send(msg).catch(function (error) {
-                console.log(error);
-            })
         });
         console.log("client.on.message " + m);
     }
@@ -113,6 +105,8 @@ async function getSpot(curr, date = null) {
     else
     {
         console.log(curr.split('-'));
+
+        console.log(curr);
         return "failed to get " + curr.split('-')[0] +" price";
     }
     return "hello";
