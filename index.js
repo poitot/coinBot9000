@@ -22,7 +22,7 @@ client.on('voiceStateUpdate', (oldmember, newmember)=>{
         
     }
    
-})
+});
 
 client.on('message', message => {
     // bug fix: fixed url params trigering spot price check; include() => startsWith()
